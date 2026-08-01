@@ -1027,6 +1027,7 @@ export async function getAdminNutritionPlans(params: {
   search?: string;
   assignedUser?: string;
   status?: string;
+  isActive?: boolean;
   templatesOnly?: boolean;
   templates?: boolean;
 }) {

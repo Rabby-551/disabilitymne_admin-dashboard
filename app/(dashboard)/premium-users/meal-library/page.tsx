@@ -117,6 +117,7 @@ export default function MealProgramLibraryPage() {
         limit: PAGE_SIZE,
         search: search || undefined,
         templatesOnly: true,
+        isActive: true,
       }),
   });
 
@@ -710,7 +711,7 @@ export default function MealProgramLibraryPage() {
         open={deleteOpen}
         onClose={() => setDeleteOpen(false)}
         title="Delete meal program?"
-        description={`This will archive "${selected?.title}". Assigned user copies are not deleted.`}
+        description={`This will permanently delete "${selected?.title}" from your library. Meal programs already assigned to users are separate copies and will not be deleted.`}
         confirmText="Delete"
         onConfirm={() => selected && deleteMutation.mutate(selected.id)}
         loading={deleteMutation.isPending}
