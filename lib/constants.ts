@@ -35,9 +35,40 @@ export const navItems = [
 export const authRoutes = ["/login", "/forgot-password", "/verify-otp", "/reset-password"];
 export const defaultProtectedRoute = "/dashboard";
 
+export const CANONICAL_SUBSCRIPTION_PLANS = {
+  monthly: {
+    name: "Monthly Plan",
+    price: 29.99,
+    currency: "USD",
+    durationLabel: "1 month",
+    durationMonths: 1,
+  },
+  quarterly: {
+    name: "Quarterly Plan",
+    price: 149.99,
+    currency: "USD",
+    durationLabel: "3 months",
+    durationMonths: 3,
+  },
+  annual: {
+    name: "Annual Plan",
+    price: 144,
+    currency: "USD",
+    durationLabel: "12 months",
+    durationMonths: 12,
+  },
+  premium: {
+    name: "Premium Plan",
+    price: 199.99,
+    currency: "USD",
+    durationLabel: "1 month",
+    durationMonths: 1,
+  },
+} as const;
+
 export const planPriceFallback: Record<string, number> = {
-  monthly: 29.99,
-  quarterly: 149.99,
-  annual: 144,
-  premium: 150,
+  monthly: CANONICAL_SUBSCRIPTION_PLANS.monthly.price,
+  quarterly: CANONICAL_SUBSCRIPTION_PLANS.quarterly.price,
+  annual: CANONICAL_SUBSCRIPTION_PLANS.annual.price,
+  premium: CANONICAL_SUBSCRIPTION_PLANS.premium.price,
 };

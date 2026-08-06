@@ -23,14 +23,15 @@ import {
   updateSubscriptionPlan,
   type SubscriptionPlan,
 } from "@/lib/api";
+import { CANONICAL_SUBSCRIPTION_PLANS } from "@/lib/constants";
 
 const defaultForm = {
-  key: "monthly",
-  name: "",
-  price: "29.99",
-  currency: "USD",
-  durationLabel: "1 month",
-  durationMonths: "1",
+  key: "monthly" as keyof typeof CANONICAL_SUBSCRIPTION_PLANS,
+  name: CANONICAL_SUBSCRIPTION_PLANS.monthly.name,
+  price: String(CANONICAL_SUBSCRIPTION_PLANS.monthly.price),
+  currency: CANONICAL_SUBSCRIPTION_PLANS.monthly.currency,
+  durationLabel: CANONICAL_SUBSCRIPTION_PLANS.monthly.durationLabel,
+  durationMonths: String(CANONICAL_SUBSCRIPTION_PLANS.monthly.durationMonths),
   trialDays: "0",
   features: "",
 };
@@ -58,30 +59,37 @@ const planThemeByKey: Record<string, { border: string; price: string; check: str
   },
 };
 
-const planDefaultsByKey: Record<string, Pick<typeof defaultForm, "name" | "price" | "durationLabel" | "durationMonths">> = {
+const planDefaultsByKey: Record<
+  keyof typeof CANONICAL_SUBSCRIPTION_PLANS,
+  Pick<typeof defaultForm, "name" | "price" | "durationLabel" | "durationMonths" | "currency">
+> = {
   monthly: {
-    name: "Monthly Plan",
-    price: "29.99",
-    durationLabel: "1 month",
-    durationMonths: "1",
+    name: CANONICAL_SUBSCRIPTION_PLANS.monthly.name,
+    price: String(CANONICAL_SUBSCRIPTION_PLANS.monthly.price),
+    currency: CANONICAL_SUBSCRIPTION_PLANS.monthly.currency,
+    durationLabel: CANONICAL_SUBSCRIPTION_PLANS.monthly.durationLabel,
+    durationMonths: String(CANONICAL_SUBSCRIPTION_PLANS.monthly.durationMonths),
   },
   quarterly: {
-    name: "Quarterly Plan",
-    price: "149.99",
-    durationLabel: "3 months",
-    durationMonths: "3",
+    name: CANONICAL_SUBSCRIPTION_PLANS.quarterly.name,
+    price: String(CANONICAL_SUBSCRIPTION_PLANS.quarterly.price),
+    currency: CANONICAL_SUBSCRIPTION_PLANS.quarterly.currency,
+    durationLabel: CANONICAL_SUBSCRIPTION_PLANS.quarterly.durationLabel,
+    durationMonths: String(CANONICAL_SUBSCRIPTION_PLANS.quarterly.durationMonths),
   },
   annual: {
-    name: "Annual Plan",
-    price: "13.99",
-    durationLabel: "12 months",
-    durationMonths: "12",
+    name: CANONICAL_SUBSCRIPTION_PLANS.annual.name,
+    price: String(CANONICAL_SUBSCRIPTION_PLANS.annual.price),
+    currency: CANONICAL_SUBSCRIPTION_PLANS.annual.currency,
+    durationLabel: CANONICAL_SUBSCRIPTION_PLANS.annual.durationLabel,
+    durationMonths: String(CANONICAL_SUBSCRIPTION_PLANS.annual.durationMonths),
   },
   premium: {
-    name: "Premium Plan",
-    price: "199.99",
-    durationLabel: "1 month",
-    durationMonths: "1",
+    name: CANONICAL_SUBSCRIPTION_PLANS.premium.name,
+    price: String(CANONICAL_SUBSCRIPTION_PLANS.premium.price),
+    currency: CANONICAL_SUBSCRIPTION_PLANS.premium.currency,
+    durationLabel: CANONICAL_SUBSCRIPTION_PLANS.premium.durationLabel,
+    durationMonths: String(CANONICAL_SUBSCRIPTION_PLANS.premium.durationMonths),
   },
 };
 
@@ -258,7 +266,8 @@ export default function SubscriptionManagementPage() {
                 disabled={Boolean(selectedPlan)}
                 onChange={(event) =>
                   setFormData((prev) => {
-                    const nextKey = event.target.value;
+                    const nextKey = event.target
+                      .value as keyof typeof CANONICAL_SUBSCRIPTION_PLANS;
                     const defaults = planDefaultsByKey[nextKey];
                     if (!defaults) {
                       return { ...prev, key: nextKey };
