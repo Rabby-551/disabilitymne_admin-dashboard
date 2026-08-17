@@ -25,8 +25,21 @@ import {
 } from "@/lib/api";
 import { CANONICAL_SUBSCRIPTION_PLANS } from "@/lib/constants";
 
-const defaultForm = {
-  key: "monthly" as keyof typeof CANONICAL_SUBSCRIPTION_PLANS,
+type SubscriptionPlanKey = keyof typeof CANONICAL_SUBSCRIPTION_PLANS;
+
+type PlanForm = {
+  key: SubscriptionPlanKey;
+  name: string;
+  price: string;
+  currency: string;
+  durationLabel: string;
+  durationMonths: string;
+  trialDays: string;
+  features: string;
+};
+
+const defaultForm: PlanForm = {
+  key: "monthly",
   name: CANONICAL_SUBSCRIPTION_PLANS.monthly.name,
   price: String(CANONICAL_SUBSCRIPTION_PLANS.monthly.price),
   currency: CANONICAL_SUBSCRIPTION_PLANS.monthly.currency,
@@ -60,8 +73,8 @@ const planThemeByKey: Record<string, { border: string; price: string; check: str
 };
 
 const planDefaultsByKey: Record<
-  keyof typeof CANONICAL_SUBSCRIPTION_PLANS,
-  Pick<typeof defaultForm, "name" | "price" | "durationLabel" | "durationMonths" | "currency">
+  SubscriptionPlanKey,
+  Pick<PlanForm, "name" | "price" | "durationLabel" | "durationMonths" | "currency">
 > = {
   monthly: {
     name: CANONICAL_SUBSCRIPTION_PLANS.monthly.name,
