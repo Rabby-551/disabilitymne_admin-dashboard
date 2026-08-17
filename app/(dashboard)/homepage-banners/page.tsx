@@ -7,6 +7,7 @@ import { toast } from "sonner";
 
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { EmptyState } from "@/components/shared/empty-state";
+import { BannerImageCropper } from "@/components/shared/banner-image-cropper";
 import { PageTitle } from "@/components/shared/page-title";
 import { TableSkeleton } from "@/components/shared/table-skeleton";
 import { Badge } from "@/components/ui/badge";
@@ -29,6 +30,7 @@ export default function HomepageBannersPage() {
   const queryClient = useQueryClient();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [deleteTarget, setDeleteTarget] = useState<HomeBanner | null>(null);
+  const [cropFiles, setCropFiles] = useState<File[]>([]);
 
   const bannersQuery = useQuery({
     queryKey: ["admin-home-banners"],
@@ -45,6 +47,7 @@ export default function HomepageBannersPage() {
     mutationFn: uploadAdminHomeBanners,
     onSuccess: (uploaded) => {
       toast.success(uploaded.length === 1 ? "Homepage photo uploaded." : `${uploaded.length} homepage photos uploaded.`);
+      setCropFiles([]);
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
       }
@@ -101,7 +104,7 @@ export default function HomepageBannersPage() {
       return;
     }
 
-    uploadMutation.mutate(selected);
+    setCropFiles(selected);
   };
 
   const moveBanner = (index: number, direction: -1 | 1) => {
@@ -147,7 +150,8 @@ export default function HomepageBannersPage() {
                 These photos appear under <span className="font-semibold">My Programs</span> on the app homepage.
               </p>
               <p className="mt-1 text-sm text-slate-400">
-                One photo shows as a single image. Two or more photos become a swipeable slider in the app.
+                Crop each photo to 2:1 before upload so it fits the app banner. One photo shows as a
+                single image. Two or more become a swipeable slider.
               </p>
             </div>
             <Badge variant="blue">{banners.length} / {MAX_HOME_BANNERS} photos</Badge>
@@ -175,7 +179,9 @@ export default function HomepageBannersPage() {
             <p className="text-sm font-medium text-white">
               {uploadMutation.isPending ? "Uploading photos..." : "Click to upload homepage photos"}
             </p>
-            <p className="mt-1 text-xs text-slate-400">JPG, PNG, or WebP. Multiple files are allowed.</p>
+            <p className="mt-1 text-xs text-slate-400">
+              JPG, PNG, or WebP. You will crop each photo to the app banner size.
+            </p>
           </button>
         </CardContent>
       </Card>
@@ -265,6 +271,19 @@ export default function HomepageBannersPage() {
           ))}
         </div>
       ) : null}
+
+      <BannerImageCropper
+        open={cropFiles.length > 0}
+        files={cropFiles}
+        isUploading={uploadMutation.isPending}
+        onClose={() => {
+          if (uploadMutation.isPending) return;
+          setCropFiles([]);
+        }}
+        onComplete={(croppedFiles) => {
+          uploadMutation.mutate(croppedFiles);
+        }}
+      />
 
       <ConfirmDialog
         open={Boolean(deleteTarget)}
