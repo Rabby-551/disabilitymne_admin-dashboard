@@ -7,6 +7,7 @@ const protectedPrefixes = [
   "/dashboard",
   "/user-management",
   "/premium-users",
+  "/homepage-banners",
   "/program-management",
   "/exercise-library",
   "/recipes-management",

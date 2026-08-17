@@ -61,6 +61,15 @@ export type MembershipSettings = {
   message: string | null;
 };
 
+export type HomeBanner = {
+  id: string;
+  imageUrl: string | null;
+  sortOrder: number;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+};
+
 export type NutritionPlanMeal = {
   id?: string;
   mealType: string;
@@ -1067,6 +1076,44 @@ export async function updateNutritionPlan(planId: string, payload: UpdateNutriti
 
 export async function deleteNutritionPlan(planId: string) {
   const response = await api.delete<ApiEnvelope<null>>(`/nutrition-plans/admin/${planId}`);
+  return response.data;
+}
+
+export async function getAdminHomeBanners() {
+  const response = await api.get<ApiEnvelope<HomeBanner[]>>("/home-banners/admin");
+  return unwrap(response);
+}
+
+export async function uploadAdminHomeBanners(files: File[]) {
+  const formData = new FormData();
+  for (const file of files) {
+    formData.append("images", file);
+  }
+
+  const response = await api.post<ApiEnvelope<HomeBanner[]>>(
+    "/home-banners/admin",
+    formData,
+    getMultipartConfig(formData)
+  );
+
+  return unwrap(response);
+}
+
+export async function reorderAdminHomeBanners(orderedIds: string[]) {
+  const response = await api.patch<ApiEnvelope<HomeBanner[]>>("/home-banners/admin/reorder", { orderedIds });
+  return unwrap(response);
+}
+
+export async function updateAdminHomeBanner(
+  bannerId: string,
+  payload: Partial<Pick<HomeBanner, "isActive" | "sortOrder">>
+) {
+  const response = await api.patch<ApiEnvelope<HomeBanner>>(`/home-banners/admin/${bannerId}`, payload);
+  return unwrap(response);
+}
+
+export async function deleteAdminHomeBanner(bannerId: string) {
+  const response = await api.delete<ApiEnvelope<null>>(`/home-banners/admin/${bannerId}`);
   return response.data;
 }
 
